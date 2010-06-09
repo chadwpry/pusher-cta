@@ -54,6 +54,18 @@ class VehicleRoute < ActiveRecord::Base
     end
   end
 
+  def list_locations
+    import_locations unless cached?
+
+    Location.all(:conditions => ["vrid = ? and active = ?", vrid, true]).each do |location|
+      notify_pusher(location)
+    end
+  end
+
+  def cached?
+    false
+  end
+
   def notify_pusher(location)
     message = {
       :vehicle => {

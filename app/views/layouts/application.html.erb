@@ -43,8 +43,8 @@
           <%= select("vehicle", "route", @vehicle_routes.collect { |r| ["##{r.vrid} #{r.name}", r.vrid] }, :include_blank => true) %>
       </p>
       <p>
-          <input type="button" value="Retry" id="eventButton" />
-          <input type="button" value="Clear" id="clearButton" />
+          <input type="button" value="Retry" id="retry_button" />
+          <input type="button" value="Clear" id="clear_button" />
       </p>
     </div>
     <br style="clear:both" />
