@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+
+  <title>Locations: <%= controller.action_name %></title>
+
+  <%= stylesheet_link_tag 'howtopush' %>
+
+  <%= javascript_include_tag 'jquery.js' %>
+  <%= javascript_include_tag 'howtopush.js' %>
+  <%= javascript_include_tag 'swfobject.js' %>
+  <%= javascript_include_tag 'FABridge.js' %>
+  <%= javascript_include_tag 'web_socket.js' %>
+  <%= javascript_include_tag 'http://js.pusherapp.com/1.4/pusher.min.js' %>
+  <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+
+	<script type="text/javascript" charset="utf-8">
+	  WebSocket.__swfLocation = "javascripts/WebSocketMain.swf";
+	</script>
+</head>
+<body>
+
+<p style="color: green"><%= notice %></p>
+
+  <div class="center">
+    <h1>Chicago Transit Authority Pusher <p class="right"><a href="http://pusherapp.com/" target="_blank">Visit Pusher App</a></p></h1>
+    <div id="map_canvas"></div>
+    <div class="box">
+      <p>To get going, just select a vehicle route. Your vehicles will pop up on the right.</p>
+    </div>
+    <div class="pushes">
+      <ul>
+      </ul>
+    </div>
+    <div class="form">
+      <p>
+          <label>Title</label><br />
+          <input type="hidden" id="key" value="<%= Pusher.key %>" />
+          <%= select("vehicle", "route", @vehicle_routes.collect { |r| ["##{r.vrid} #{r.name}", r.vrid] }, :include_blank => true) %>
+      </p>
+      <p>
+          <input type="submit" value="Retry" id="eventButton" />
+      </p>
+    </div>
+    <br style="clear:both" />
+  </div>
+  <br style="clear:both" />
+
+</body>
+</html>

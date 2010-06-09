@@ -1,0 +1,17 @@
+.DS_Store
+*~
+*.swp
+log/*
+
+config/initializers/site_keys.rb
+config/deploy.rb
+config/cta.yml
+config/pusher.yml
+
+public/javascripts/cache/*
+public/stylesheets/cache/*
+
+db/*.sqlite3
+
+tmp/*
+
