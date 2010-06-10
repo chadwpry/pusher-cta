@@ -1,6 +1,7 @@
 rails --version '>= 2.3.8'
 rspec --version '>= 1.2.0'
 rspec-rails --version '>= 1.2.0'
+sqlite3-ruby --version '>= 1.2.4'
 nokogiri --version '>= 1.4.2'
 pusher --version '>= 0.5.3'
 
