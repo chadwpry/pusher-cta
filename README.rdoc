@@ -1,4 +1,4 @@
-= Tree Dehugger
+= Pusher CTA
 
 http://github.com/chaddownbeat/pusher-cta
 
@@ -18,9 +18,9 @@ http://github.com/chaddownbeat/pusher-cta
   Integrating CTA api
   Building an API abstraction layer (given time and need)
   Map integration
+  Create icon with directionality for vehicles
+  Create route unfilled polygon
   Other???
-
-== SYNOPSIS:
 
 == REQUIREMENTS:
 
@@ -32,7 +32,7 @@ http://github.com/chaddownbeat/pusher-cta
 
 == INSTALL:
 
-  git clone ...
+  git clone http://github.com/chaddownbeat/pusher-cta.git
 
 == LICENSE:
 

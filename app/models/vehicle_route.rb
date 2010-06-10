@@ -49,7 +49,7 @@ class VehicleRoute < ActiveRecord::Base
         location.destination = dest
         location.save
 
-        notify_pusher(location)
+        Location.update_all(["active = ?", false], ["vid = ? and active = ? and id != ?", vid, true, location.id])
       end
     end
   end
@@ -63,13 +63,13 @@ class VehicleRoute < ActiveRecord::Base
   end
 
   def cached?
-    false
+    Location.first(:conditions => ["vrid = ?", vrid], :order => 'created_at desc').older_than?(30.seconds)
   end
 
   def notify_pusher(location)
     message = {
       :vehicle => {
-        :id => location.vid,
+        :vid => location.vid,
         :timestamp => location.timestamp, :heading => location.heading,
         :destination => location.destination, :delayed => location.delayed,
         :lat => location.lat, :lon => location.lon,

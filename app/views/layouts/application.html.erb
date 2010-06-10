@@ -33,18 +33,19 @@
       <p>To get going, just select a vehicle route. Your vehicles will pop up on the map and display on the right.</p>
     </div>
     <div class="pushes">
+      <label>Total Vehicles Listed: <span id="vehicle_count"></span></label>
+      <label>Refreshing in: <span id="refresh_ticker"></span></label>
       <ul>
       </ul>
     </div>
     <div class="form">
       <p>
-          <label>Title</label><br />
+          <label>Route</label><br />
           <input type="hidden" id="key" value="<%= Pusher.key %>" />
           <%= select("vehicle", "route", @vehicle_routes.collect { |r| ["##{r.vrid} #{r.name}", r.vrid] }, :include_blank => true) %>
       </p>
       <p>
-          <input type="button" value="Retry" id="retry_button" />
-          <input type="button" value="Clear" id="clear_button" />
+          <input type="button" value="Stop" id="stop_button" style="display:none;" />
       </p>
     </div>
     <br style="clear:both" />

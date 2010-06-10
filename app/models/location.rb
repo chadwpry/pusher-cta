@@ -21,7 +21,6 @@ class Location < ActiveRecord::Base
     (Time.zone.now - (Time.zone.parse(timestamp) + time)) < 0
   end
 
-
   # CLASS METHODS
 
 end
