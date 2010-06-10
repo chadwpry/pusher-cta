@@ -21,7 +21,7 @@ class VehicleRoute < ActiveRecord::Base
     options = { :conditions => ["vrid = ?", vrid], :order => 'created_at asc', :limit => 1 }
     options.merge!(:vid => ["vid in ?", vehicle_list]) unless vehicle_list.empty?
 
-    url = "#{CTA[:server]}/getvehicles?key=#{CTA[:api_key]}&rt=#{vrid}"
+    url = "#{CTA_SERVER}/getvehicles?key=#{CTA_API_KEY}&rt=#{vrid}"
     Nokogiri::XML::Document.parse(open(url))
   end
 
@@ -96,7 +96,7 @@ class VehicleRoute < ActiveRecord::Base
   end
 
   def self.latest_route_document
-    Nokogiri::XML::Document.parse(open("#{CTA[:server]}/getroutes?key=#{CTA[:api_key]}"))
+    Nokogiri::XML::Document.parse(open("#{CTA_SERVER}/getroutes?key=#{CTA_API_KEY}"))
   end
 
 end
