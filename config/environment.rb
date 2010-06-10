@@ -19,7 +19,7 @@ Rails::Initializer.run do |config|
   # Specify gems that this application depends on and have them installed with rake gems:install
   config.gem "rspec",        :lib => false,     :version => ">= 1.2.0"
   config.gem "rspec-rails",  :lib => false,     :version => ">= 1.2.0"
-  config.gem "sqlite3-ruby", :lib => "sqlite3", :version => ">= 1.2.5"
+  config.gem "sqlite3-ruby", :lib => "sqlite3", :version => ">= 1.2.4"
   config.gem "nokogiri",     :lib => false,     :version => ">= 1.4.2"
   config.gem "pusher",       :lib => false,     :version => ">= 0.5.3"
   
