@@ -168,7 +168,7 @@ $(document).ready(function() {
     if (vehicle_route != '') {
       draw_pattern(vehicle_route);
     }
-    socket = setup_socket($('#key').val(), 'vehicle_route_' + vehicle_route);
+    socket = setup_socket($('#key').val(), 'vehicle_route_' + session_id + vehicle_route);
 
     update_ticker(vehicle_route);
     $('#stop_button').attr('style', 'display: block');

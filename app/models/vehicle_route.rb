@@ -57,11 +57,11 @@ class VehicleRoute < ActiveRecord::Base
     end
   end
 
-  def list_locations
+  def list_locations(session_id)
     import_locations unless cached?
 
     Location.all(:conditions => ["vrid = ? and active = ?", vrid, true]).each do |location|
-      notify_pusher(location)
+      notify_pusher(location, session_id)
     end
   end
 
@@ -118,8 +118,8 @@ class VehicleRoute < ActiveRecord::Base
     Nokogiri::XML::Document.parse(open(url))
   end
 
-  def notify_pusher(location)
-    Pusher["vehicle_route_#{location.vehicle_route.vrid.to_s}"].trigger("location_move", {
+  def notify_pusher(location, session_id = "")
+    Pusher["vehicle_route_#{session_id}#{location.vehicle_route.vrid.to_s}"].trigger("location_move", {
       :vehicle => {
         :vid => location.vid,
         :timestamp => location.timestamp, :heading => location.heading,

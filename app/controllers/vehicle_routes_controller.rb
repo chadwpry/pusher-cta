@@ -16,7 +16,7 @@ class VehicleRoutesController < ApplicationController
     })
 
     respond_to do |format|
-      format.js  { render :js => "0" if @vehicle_route.list_locations.length > 0 }
+      format.js  { render :js => "0" if @vehicle_route.list_locations(session[:session_id]).length > 0 }
     end
   end
 
