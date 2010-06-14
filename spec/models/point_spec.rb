@@ -7,7 +7,7 @@ describe Point do
     it { should have(1).errors_on(:lat) }
     it { should have(1).errors_on(:lon) }
     it { should have(2).errors_on(:pttype) }
-    it { should have(1).errors_on(:distance) }
+#    it { should have(1).errors_on(:distance) }
   end
 
   describe "instantiating an object with valid parameters" do

@@ -12,13 +12,16 @@ describe Pattern do
     before(:each) do
       @valid_attributes = {
         :pid => "1",
+        :vrid => "1",
         :length => 1.5,
         :direction => "value for direction"
       }
     end
 
     it "should create a new instance given valid attributes" do
-      Pattern.new(@valid_attributes).should be_valid
+      pattern = Pattern.new(@valid_attributes)
+      pattern.pid = @valid_attributes[:pid]
+      pattern.should be_valid
     end
   end
 end
