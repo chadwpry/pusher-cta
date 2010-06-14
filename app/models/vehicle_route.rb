@@ -66,7 +66,12 @@ class VehicleRoute < ActiveRecord::Base
   end
 
   def cached?
-    Location.first(:conditions => ["vrid = ?", vrid], :order => 'created_at desc').older_than?(30.seconds)
+    location = Location.first(:conditions => ["vrid = ?", vrid], :order => 'created_at desc')
+    if location
+      location.older_than?(30.seconds)
+    else
+      false
+    end
   end
 
   def import_patterns(pattern_list = [])
