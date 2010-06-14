@@ -119,7 +119,7 @@ class VehicleRoute < ActiveRecord::Base
   end
 
   def notify_pusher(location, session_id = "")
-    Pusher["vehicle_route_#{session_id}#{location.vehicle_route.vrid.to_s}"].trigger("location_move", {
+    Pusher["vehicle_route_#{session_id}#{location.vrid.to_s}"].trigger("location_move", {
       :vehicle => {
         :vid => location.vid,
         :timestamp => location.timestamp, :heading => location.heading,
