@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100609213255) do
+ActiveRecord::Schema.define(:version => 20100614022708) do
 
   create_table "locations", :force => true do |t|
     t.string   "vid",         :limit => 10
@@ -28,6 +28,32 @@ ActiveRecord::Schema.define(:version => 20100609213255) do
   end
 
   add_index "locations", ["vid", "lat", "lon"], :name => "index_locations_on_vid_and_lat_and_lon"
+
+  create_table "patterns", :force => true do |t|
+    t.string   "pid",        :limit => 10
+    t.float    "length"
+    t.string   "direction"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "vrid",       :limit => 10
+  end
+
+  add_index "patterns", ["pid"], :name => "index_patterns_on_pid", :unique => true
+
+  create_table "points", :force => true do |t|
+    t.integer  "pid",        :limit => 10
+    t.integer  "sequence"
+    t.float    "lat"
+    t.float    "lon"
+    t.string   "pttype",     :limit => 1
+    t.string   "stid",       :limit => 10
+    t.string   "stname"
+    t.float    "distance"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "points", ["pid", "sequence"], :name => "index_points_on_pid_and_sequence", :unique => true
 
   create_table "stops", :force => true do |t|
     t.string   "stid"

@@ -6,6 +6,9 @@ class Location < ActiveRecord::Base
 
   # ASSOCIATIONS
   belongs_to :vehicle_route, :primary_key => :vrid, :foreign_key => :vrid
+  belongs_to :pattern,       :primary_key => :pid,  :foreign_key => :pid
+
+  named_scope :active, { :conditions => ["active = ?", true] }
 
   # MIXINS
 

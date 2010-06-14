@@ -7,7 +7,10 @@ class VehicleRoute < ActiveRecord::Base
   # INCLUDES
 
   # ASSOCIATIONS
-  has_many :vehicles, :primary_key => 'vrid', :foreign_key => 'vrid'
+  set_primary_key "vrid"
+  has_many :vehicles,  :primary_key => :vrid, :foreign_key => :vrid
+  has_many :locations, :foreign_key => :vrid
+  has_many :patterns,  :foreign_key => :vrid
 
   # MIXINS
 
@@ -66,8 +69,52 @@ class VehicleRoute < ActiveRecord::Base
     Location.first(:conditions => ["vrid = ?", vrid], :order => 'created_at desc').older_than?(30.seconds)
   end
 
+  def import_patterns(pattern_list = [])
+    latest_pattern_document(pattern_list).xpath("//bustime-response/ptr").each do |pattern|
+
+      Pattern.delete_all(["pid = ?", pattern.search("pid").text.strip])
+      Point.delete_all(["pid = ?", pattern.search("pid").text.strip])
+
+      puts "vrid: #{vrid} pid: #{pattern.search("pid").text.strip}"
+
+      persisted_pattern = Pattern.new({
+        :vrid      => vrid,
+        :length    => pattern.search("ln").text.strip,
+        :direction => pattern.search("rtdir").text.strip
+      })
+      persisted_pattern.pid = pattern.search("pid").text.strip
+
+      if persisted_pattern.save
+        pattern.search("pt").each do |point|
+          options = {
+            :pid => persisted_pattern[:pid],
+            :sequence => point.search("seq").text.strip,
+            :lat => point.search("lat").text.strip,
+            :lon => point.search("lon").text.strip,
+            :pttype => (point.search("typ").text.strip.empty? ? 'W' : point.search("typ").text.strip)
+          }
+          options.merge!({
+            :stid => point.search("stpid").text.strip,
+            :stname => point.search("stpnm").text.strip,
+            :distance => point.search("pdist").text.strip
+          }) if options[:pttype] == 'S'
+
+          Point.create!(options)
+        end
+      end
+    end
+  end
+
+  def latest_pattern_document(pattern_list)
+    options = { :conditions => ["vrid = ?", vrid], :order => 'created_at asc', :limit => 1 }
+    options.merge!(:pid => ["pid in ?", pattern_list]) unless pattern_list.empty?
+
+    url = "#{CTA_SERVER}/getpatterns?key=#{CTA_API_KEY}&rt=#{vrid}"
+    Nokogiri::XML::Document.parse(open(url))
+  end
+
   def notify_pusher(location)
-    message = {
+    Pusher["vehicle_route_#{location.vehicle_route.vrid.to_s}"].trigger("location_move", {
       :vehicle => {
         :vid => location.vid,
         :timestamp => location.timestamp, :heading => location.heading,
@@ -80,10 +127,7 @@ class VehicleRoute < ActiveRecord::Base
           :vrid => location.vrid
         }
       }
-    }
-
-    puts "message: #{message.inspect}"
-    Pusher["vehicle_route_#{location.vehicle_route.vrid.to_s}"].trigger("location_move", message)
+    })
   end
 
   # CLASS METHODS

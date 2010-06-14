@@ -1,9 +1,10 @@
 var map = null;
 var socket = null;
 var timer_id = null;
-var interval = 15;
+var interval = 45;
 var marker_list = [];
 var marker_count = null;
+var pattern_drawn = false;
 
 function attach_message(marker, data) {
   var message_data = '<li style="display:none;" class="new">'+
@@ -22,10 +23,12 @@ function attach_message(marker, data) {
 }
 
 function stop_timer() {
-  socket = null;
+  if (socket != null) {
+    socket.connection.close();
+    socket = null;
+  }
   if (timer_id != null) {
     clearTimeout(timer_id);
-    $('#vehicle_route').attr('selectedIndex', 0);
     $('#refresh_ticker').text('Stopped');
     $('#stop_button').attr('style', 'display: none');
     marker_list = [];
@@ -39,6 +42,7 @@ function setup_socket(api_key, channel) {
   // Set the vehicle marker count
   marker_count = 0;
   $('#vehicle_count').text(marker_count);
+
 
   // Bind to our event
   socket.bind('location_move', function(data) {
@@ -66,6 +70,8 @@ function setup_socket(api_key, channel) {
     $('.new').slideDown();
     $('.new').removeClass('new');
   });
+
+  return socket;
 }
 
 function define_map(lat, lon) {
@@ -73,6 +79,28 @@ function define_map(lat, lon) {
     zoom: 10,
     center: new google.maps.LatLng(lat, lon),
     mapTypeId: google.maps.MapTypeId.ROADMAP
+  });
+}
+
+function draw_pattern(vrid) {
+  $.getJSON('vehicle_routes/' + vrid + '/patterns.js', { }, function(data) {
+    if (data != null) {
+      coordinates = [];
+      $(data).each(function(index, value) {
+        $(value.pattern.points).each(function(index, point) {
+          coordinates[coordinates.length] = new google.maps.LatLng(point.lat, point.lon);
+        });
+
+        var pattern_path = new google.maps.Polyline({
+          path: coordinates,
+          strokeColor: "#0000CC",
+          strokeOpacity: 1.0,
+          strokeWeight: 5
+        });
+
+        pattern_path.setMap(map);
+      });
+    }
   });
 }
 
@@ -111,11 +139,13 @@ function update_ticker(vehicle_route) {
 
 $(document).ready(function() {
   map = define_map(41.8379815299556,-87.6218794336859);
+
   $('#vehicle_count').text(0);
   $('#refresh_ticker').text('Stopped');
 
   $('#stop_button').click(function() {
     stop_timer();
+    $('#vehicle_route').attr('selectedIndex', 0);
   })
 
   // Close bus box event handler
@@ -126,13 +156,19 @@ $(document).ready(function() {
 
   // Updating drop down event handler
   $('#vehicle_route').change(function() {
+    stop_timer();
+
     $('.pushes ul').children().each(function() {
       $(this).remove();
     });
 
     map = define_map(41.8379815299556,-87.6218794336859);
     vehicle_route = $('#vehicle_route').val();
-    socket = setup_socket( $('#key').val(), 'vehicle_route_' + vehicle_route );
+
+    if (vehicle_route != '') {
+      draw_pattern(vehicle_route);
+    }
+    socket = setup_socket($('#key').val(), 'vehicle_route_' + vehicle_route);
 
     update_ticker(vehicle_route);
     $('#stop_button').attr('style', 'display: block');
