@@ -83,6 +83,7 @@ class VehicleRoute < ActiveRecord::Base
       puts "vrid: #{vrid} pid: #{pattern.search("pid").text.strip}"
 
       persisted_pattern = Pattern.new({
+        :pid       => pattern.search("pid").text.strip,
         :vrid      => vrid,
         :length    => pattern.search("ln").text.strip,
         :direction => pattern.search("rtdir").text.strip
