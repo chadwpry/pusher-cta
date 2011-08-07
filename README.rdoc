@@ -1,6 +1,6 @@
 = Pusher CTA
 
-http://github.com/chaddownbeat/pusher-cta
+http://github.com/chadwpry/pusher-cta
 
 == DESCRIPTION:
 
